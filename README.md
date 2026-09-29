@@ -27,18 +27,19 @@ Excel's recalculation of the workbook matches an independent Python model of the
 
 | Path | Contents |
 |---|---|
-| `FulfilmentLabourPlan.xlsx` | Dashboard, Inputs, Plan (56 days), ShiftPlan, Weekly. Every calculation is a live formula |
-| `vba/modLabourPlan.bas` | Macros: scenario buttons, input check, scenario comparison, PDF export of the dashboard |
+| `FulfilmentLabourPlan.xlsm` | Dashboard, Inputs, Plan (56 days), ShiftPlan, Weekly. Every calculation is a live formula; the macros are built in |
+| `vba/modLabourPlan.bas` | Macro source: scenario buttons, input check, scenario comparison, PDF export of the dashboard |
 | `build/build_xlsx.py` | Generates the workbook and the reference figures above |
+| `build/vba_project.py` | Packs the `.bas` source into the workbook's macro project |
 | `build/make_preview.py` | Draws `docs/dashboard.png` from the same model |
 
 ## Using it
 
-Change the Scenario dropdown on Inputs, or any blue input cell, and the plan recalculates.
+Open the workbook and choose Enable Macros. Change the Scenario dropdown on Inputs, or any blue input cell, and the plan recalculates. The Dashboard buttons switch scenario, check the inputs, refresh the comparison table and export the dashboard to PDF. Run Compare scenarios once after changing inputs.
 
-To switch on the Dashboard buttons, press Alt+F11, choose File > Import File, pick `vba/modLabourPlan.bas`, and save the workbook as `.xlsm`. The buttons are already linked to the macro names. Run Compare scenarios once after changing inputs to refresh the comparison table.
+The plan sheets are plain formulas, so everything except the buttons works with macros disabled.
 
-To rebuild the workbook: `pip install xlsxwriter matplotlib`, then `python3 build/build_xlsx.py` from the project folder.
+To rebuild: `pip install xlsxwriter matplotlib`, then from the project folder run `python3 build/vba_project.py`, `python3 build/build_xlsx.py` and `python3 build/make_preview.py`.
 
 ## Assumptions worth challenging
 

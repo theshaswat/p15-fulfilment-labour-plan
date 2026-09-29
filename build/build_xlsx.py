@@ -1,4 +1,4 @@
-"""Builds FulfilmentLabourPlan.xlsx (formulas live; VBA is added afterwards). All inputs are illustrative."""
+"""Builds FulfilmentLabourPlan.xlsm (live formulas plus the macro project from build/vba_project.py). All inputs are illustrative."""
 import math, random, datetime as dt, json, xlsxwriter
 
 random.seed(15)
@@ -38,7 +38,8 @@ def summary(mult):
             sum(1 for x in r if x["Q"] > 0), sum(x["util"] for x in r) / len(r)]
 
 if __name__ == "__main__":
-    wb = xlsxwriter.Workbook("FulfilmentLabourPlan.xlsx", {"use_future_functions": True})
+    wb = xlsxwriter.Workbook("FulfilmentLabourPlan.xlsm", {"use_future_functions": True})
+    wb.add_vba_project("build/vbaProject.bin")
     NAVY, GREY, BLUE, COPPER = "#22303C", "#F4EFE6", "#0000FF", "#B8642B"
     f = lambda **k: wb.add_format({"font_name": "Calibri", "font_size": 10, **k})
     title = f(bold=True, font_size=16, font_color=NAVY); hdr = f(bold=True, bg_color=NAVY, font_color="white", border=1, text_wrap=True, align="center", valign="vcenter")
@@ -206,7 +207,6 @@ if __name__ == "__main__":
     for i, (cap, mac) in enumerate([("Base scenario", "RunScenarioBase"), ("Peak scenario", "RunScenarioPeak"), ("Low scenario", "RunScenarioLow"),
                                     ("Compare scenarios", "CompareScenarios"), ("Check inputs", "ValidateInputs"), ("Export PDF", "ExportDashboardPDF")]):
         wd.insert_button(3 + i, 3, {"macro": mac, "caption": cap, "width": 130, "height": 20, "y_offset": 1})
-    wd.write("D3", "Buttons run the macros in modLabourPlan.bas: import it once (Alt+F11, File, Import) and save as .xlsm.", note)
     for sh, col in ((wd, COPPER), (wi, "#C9A227"), (wp, NAVY), (ws, NAVY), (ww, NAVY)):
         sh.set_tab_color(col); sh.hide_gridlines(2); sh.set_landscape(); sh.fit_to_pages(1, 0); sh.set_paper(9)
     wp.repeat_rows(3); ws.repeat_rows(3)
